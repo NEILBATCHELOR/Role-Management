@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      investors: {
+        Row: {
+          accreditation_status: string | null
+          country: string | null
+          created_at: string | null
+          email: string
+          id: string
+          investor_id: string | null
+          kyc_expiry_date: string | null
+          kyc_status: string
+          name: string
+          type: string
+          wallet: string
+        }
+        Insert: {
+          accreditation_status?: string | null
+          country?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          investor_id?: string | null
+          kyc_expiry_date?: string | null
+          kyc_status?: string
+          name: string
+          type: string
+          wallet: string
+        }
+        Update: {
+          accreditation_status?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          investor_id?: string | null
+          kyc_expiry_date?: string | null
+          kyc_status?: string
+          name?: string
+          type?: string
+          wallet?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           created_at: string | null
@@ -32,6 +74,98 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          allocated: boolean
+          confirmed: boolean
+          created_at: string | null
+          currency: string
+          distributed: boolean
+          fiat_amount: number
+          id: string
+          investor_id: string
+          subscription_id: string
+        }
+        Insert: {
+          allocated?: boolean
+          confirmed?: boolean
+          created_at?: string | null
+          currency: string
+          distributed?: boolean
+          fiat_amount: number
+          id?: string
+          investor_id: string
+          subscription_id: string
+        }
+        Update: {
+          allocated?: boolean
+          confirmed?: boolean
+          created_at?: string | null
+          currency?: string
+          distributed?: boolean
+          fiat_amount?: number
+          id?: string
+          investor_id?: string
+          subscription_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_investor_id_fkey"
+            columns: ["investor_id"]
+            isOneToOne: false
+            referencedRelation: "investor_subscriptions_view"
+            referencedColumns: ["investor_id"]
+          },
+          {
+            foreignKeyName: "subscriptions_investor_id_fkey"
+            columns: ["investor_id"]
+            isOneToOne: false
+            referencedRelation: "investors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      token_allocations: {
+        Row: {
+          created_at: string | null
+          distributed: boolean
+          distribution_date: string | null
+          distribution_tx_hash: string | null
+          id: string
+          subscription_id: string
+          token_amount: number
+          token_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          distributed?: boolean
+          distribution_date?: string | null
+          distribution_tx_hash?: string | null
+          id?: string
+          subscription_id: string
+          token_amount: number
+          token_type: string
+        }
+        Update: {
+          created_at?: string | null
+          distributed?: boolean
+          distribution_date?: string | null
+          distribution_tx_hash?: string | null
+          id?: string
+          subscription_id?: string
+          token_amount?: number
+          token_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "token_allocations_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       token_comments: {
         Row: {
@@ -108,6 +242,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      token_designs: {
+        Row: {
+          contract_address: string | null
+          created_at: string | null
+          deployment_date: string | null
+          id: string
+          name: string
+          status: string
+          total_supply: number
+          type: string
+        }
+        Insert: {
+          contract_address?: string | null
+          created_at?: string | null
+          deployment_date?: string | null
+          id?: string
+          name: string
+          status?: string
+          total_supply: number
+          type: string
+        }
+        Update: {
+          contract_address?: string | null
+          created_at?: string | null
+          deployment_date?: string | null
+          id?: string
+          name?: string
+          status?: string
+          total_supply?: number
+          type?: string
+        }
+        Relationships: []
       }
       token_versions: {
         Row: {
@@ -205,7 +372,25 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      investor_subscriptions_view: {
+        Row: {
+          allocated: boolean | null
+          confirmed: boolean | null
+          currency: string | null
+          distributed: boolean | null
+          fiat_amount: number | null
+          investor_email: string | null
+          investor_id: string | null
+          investor_name: string | null
+          investor_type: string | null
+          kyc_status: string | null
+          subscription_id: string | null
+          token_amount: number | null
+          token_type: string | null
+          wallet: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
